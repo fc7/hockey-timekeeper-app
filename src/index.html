@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hockey Clock App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="container">
+        <h1 id="currentDateTime"></h1>
+        <div class="settings-panel">
+            <label for="periodDuration">Period Length:</label>
+            <select id="periodDuration">
+                <option value="15">15 min</option>
+                <option value="20" selected>20 min</option>
+            </select>
+            <br/>
+            <label for="overtimeDuration">Overtime Length:</label>
+            <select id="overtimeDuration">
+                <option value="0" selected>-</option>
+                <option value="10">10 min</option>
+            </select>
+        </div>
+        <div class="main-layout">
+            <div class="penalties-team" id="penalties-team1">
+                <h3>Home Penalties</h3>
+                <div id="team1PenaltiesList"></div>
+                <button id="addPenaltyTeam1">+ Add Penalty</button>
+            </div>
+            <div class="center-panel">
+                <h2 id="periodDisplay">Period 1</h2>
+                <div id="clock" class="clock">
+                    <input type="text" id="clock-minutes" class="clock-digits" value="00" />
+                    <span class="clock-digits">:</span>
+                    <input type="text" id="clock-seconds" class="clock-digits" value="00" />
+                    <div id="remainingTime" class="remaining-time"></div>
+                </div>
+                <div class="scoreboard">
+                    <div class="team" id="team1">
+                        <input type="text" id="team1Name" class="team-name" value="Home Team" />
+                        <div class="score" id="score1">
+                            Score: <span id="score1Value">0</span>
+                            <span class="score-widget">
+                                <button class="score-btn score-up" id="score1Up">&#9650;</button>
+                                <button class="score-btn score-down" id="score1Down">&#9660;</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="team" id="team2">
+                        <input type="text" id="team2Name" class="team-name" value="Visitor Team" />
+                        <div class="score" id="score2">
+                            Score: <span id="score2Value">0</span>
+                            <span class="score-widget">
+                                <button class="score-btn score-up" id="score2Up">&#9650;</button>
+                                <button class="score-btn score-down" id="score2Down">&#9660;</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="penalties-team" id="penalties-team2">
+                <h3>Visitor Penalties</h3>
+                <div id="team2PenaltiesList"></div>
+                <button id="addPenaltyTeam2">+ Add Penalty</button>
+            </div>
+        </div>
+        <button id="startStopButton">Start/Stop</button>
+        <button id="advancePeriodButton" style="display:none;">Advance Period</button>
+        <button id="resetButton">Reset</button>
+    </div>
+    <div id="penaltyModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3>Add Penalty</h3>
+            <label>Duration:</label>
+            <select id="penaltyDurationSelect">
+                <option value="120" selected>2:00</option>
+                <option value="300">5:00</option>
+                <option value="600">10:00</option>
+            </select>
+            <br/>
+            <label>Remaining Time:</label>
+            <input type="number" id="penaltyMinutesInput" min="0" max="10" value="2" style="width:40px;" /> :
+            <input type="number" id="penaltySecondsInput" min="0" max="59" value="00" style="width:40px;" />
+            <br/>
+            <label>Player Number:</label>
+            <input type="text" id="penaltyPlayerInput" style="width:40px;" />
+            <br/>
+            <button id="penaltyModalOk">OK</button>
+            <button id="penaltyModalCancel">Cancel</button>
+        </div>
+    </div>
+    <script src="scripts/clock.js"></script>
+</body>
+</html>
