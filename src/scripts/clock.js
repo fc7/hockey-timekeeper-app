@@ -106,6 +106,7 @@ function startClock() {
         if (secondsInput) secondsInput.value = String(seconds).padStart(2, '0');
         updatePeriodDisplay();
         updateRemainingTime();
+        saveAppState();
     }
 
     function updateScores() {
@@ -140,6 +141,7 @@ function startClock() {
         team2Penalties.forEach((penalty, idx) => {
             team2List.appendChild(getPenaltyElement(penalty, idx, 2));
         });
+        saveAppState();
     }
 
     function formatTime(sec) {
@@ -237,6 +239,7 @@ function startClock() {
         }
         hidePenaltyModal();
         renderPenalties();
+        saveAppState();
     };
 
     penaltyModalCancel.onclick = () => {
@@ -266,6 +269,7 @@ function startClock() {
                 team2Penalties[idx].remaining = val;
             }
             renderPenalties();
+            saveAppState();
         }
     });
     document.addEventListener('click', (e) => {
@@ -275,6 +279,7 @@ function startClock() {
             if (team === '1') team1Penalties.splice(idx, 1);
             else team2Penalties.splice(idx, 1);
             renderPenalties();
+            saveAppState();
         }
     });
 
@@ -331,21 +336,25 @@ function startClock() {
         if (interval) return;
         score1++;
         updateScores();
+        saveAppState();
     });
     document.getElementById('score1Down').addEventListener('click', () => {
         if (interval) return;
         if (score1 > 0) score1--;
         updateScores();
+        saveAppState();
     });
     document.getElementById('score2Up').addEventListener('click', () => {
         if (interval) return;
         score2++;
         updateScores();
+        saveAppState();
     });
     document.getElementById('score2Down').addEventListener('click', () => {
         if (interval) return;
         if (score2 > 0) score2--;
         updateScores();
+        saveAppState();
     });
 
     document.getElementById('resetButton').onclick = () => {
@@ -361,6 +370,7 @@ function startClock() {
         updateDisplay();
         updateScores();
         renderPenalties();
+        saveAppState();
     };
 
     // Make clock inputs editable
@@ -393,13 +403,49 @@ function startClock() {
         updateDisplay();
     });
 
+    restoreAppState();
+
     updateDisplay();
     updateScores();
-    // Initial render
     renderPenalties();
 
     // On initial load, ensure inputs are enabled
     setClockInputsEnabled(true);
+
+    function saveAppState() {
+        const state = {
+            timer,
+            currentPeriod,
+            score1,
+            score2,
+            team1Name: document.getElementById('team1Name').value,
+            team2Name: document.getElementById('team2Name').value,
+            periodDuration,
+            overtimeDuration,
+            team1Penalties,
+            team2Penalties
+        };
+        localStorage.setItem('hockeyClockState', JSON.stringify(state));
+    }
+
+    function restoreAppState() {
+        const stateStr = localStorage.getItem('hockeyClockState');
+        if (!stateStr) return;
+        const state = JSON.parse(stateStr);
+
+        timer = state.timer ?? 0;
+        currentPeriod = state.currentPeriod ?? 1;
+        score1 = state.score1 ?? 0;
+        score2 = state.score2 ?? 0;
+        document.getElementById('team1Name').value = state.team1Name ?? "Home Team";
+        document.getElementById('team2Name').value = state.team2Name ?? "Visitor Team";
+        periodDuration = state.periodDuration ?? 20;
+        overtimeDuration = state.overtimeDuration ?? 0;
+        team1Penalties = state.team1Penalties ?? [];
+        team2Penalties = state.team2Penalties ?? [];
+        updateDisplay();
+        renderPenalties();
+    }
 }
 
 startClock();
