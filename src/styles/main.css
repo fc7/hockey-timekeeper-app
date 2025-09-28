@@ -235,7 +235,7 @@ h2 {
     min-width: 400px;
 }
 
-#startStopButton {
+#startStopButton, #advancePeriodButton {
     display: block;
     margin: 30px auto 0 auto;
     position: relative;
@@ -250,7 +250,7 @@ h2 {
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
 }
-#startStopButton:hover {
+#startStopButton:hover, #advancePeriodButton:hover {
     background: #dbeaff;
     color: #23527c;
 }
