@@ -353,10 +353,13 @@ function startClock() {
         stopTimer();
         timer = 0;
         currentPeriod = 1;
+        score1 = 0;
+        score2 = 0;
         team1Penalties = [];
         team2Penalties = [];
         advancePeriodButton.style.display = 'none';
         updateDisplay();
+        updateScores();
         renderPenalties();
     };
 
