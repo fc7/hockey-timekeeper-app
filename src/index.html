@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hockey Clock App</title>
+    <title>Hockey Timekeeper App</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
@@ -95,20 +95,20 @@
             </select>
             <br/>
             <label>Remaining Time:</label>
-            <input type="number" id="penaltyMinutesInput" min="0" max="10" value="2" style="width:40px;" /> :
-            <input type="number" id="penaltySecondsInput" min="0" max="59" value="00" style="width:40px;" />
+            <input type="number" id="penaltyMinutesInput" min="0" max="10" value="2" /> :
+            <input type="number" id="penaltySecondsInput" min="0" max="59" value="00" />
             <br/>
             <label>Player Number:</label>
-            <input type="text" id="penaltyPlayerInput" style="width:40px;" />
+            <input type="text" id="penaltyPlayerInput" />
             <br/>
             <button id="penaltyModalOk">OK</button>
             <button id="penaltyModalCancel">Cancel</button>
         </div>
     </div>
     <div id="timeoutModal" class="modal" style="display:none;">
-        <div class="modal-content" style="width:70vw; height:70vh; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div class="modal-content">
             <h2>Timeout</h2>
-            <div id="timeoutCountdown" style="font-size:10em; margin:30px 0;">30</div>
+            <div id="timeoutCountdown">30</div>
             <!--<button id="timeoutCloseButton" style="font-size:1.2em; margin-top:20px;">Close</button>-->
         </div>
     </div>
