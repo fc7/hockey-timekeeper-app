@@ -26,6 +26,13 @@
                 <option value="5">5 min</option>
                 <option value="10">10 min</option>
             </select>
+            <br/>
+            <label for="breakDuration">Intermission:</label>
+            <select id="breakDuration">
+                <option value="5" selected>5 min</option>
+                <option value="10">10 min</option>
+                <option value="15">15 min</option>
+            </select>
         </div>
         <div class="main-layout">
             <div class="penalties-team" id="penalties-team1">
@@ -73,6 +80,7 @@
         <button id="startStopButton">Start/Stop</button>
         <button id="advancePeriodButton" style="display:none;">Advance Period</button>
         <button id="resetButton">Reset</button>
+        <button id="timeoutButton">Timeout</button>
     </div>
     <div id="penaltyModal" class="modal" style="display:none;">
         <div class="modal-content">
@@ -95,6 +103,13 @@
             <br/>
             <button id="penaltyModalOk">OK</button>
             <button id="penaltyModalCancel">Cancel</button>
+        </div>
+    </div>
+    <div id="timeoutModal" class="modal" style="display:none;">
+        <div class="modal-content" style="width:70vw; height:70vh; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <h2>Timeout</h2>
+            <div id="timeoutCountdown" style="font-size:10em; margin:30px 0;">30</div>
+            <!--<button id="timeoutCloseButton" style="font-size:1.2em; margin-top:20px;">Close</button>-->
         </div>
     </div>
     <script src="scripts/clock.js"></script>

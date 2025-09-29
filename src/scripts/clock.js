@@ -4,6 +4,9 @@ function startClock() {
     let interval = null;
     let periodDuration = 20; // default in minutes
     let overtimeDuration = 0;
+    let breakDuration = 5;
+    let breakTimer = 0;
+    let breakInterval = null;
 
     // Score variables
     let score1 = 0;
@@ -18,8 +21,21 @@ function startClock() {
     const periodDisplay = document.getElementById('periodDisplay');
     const periodDurationSelect = document.getElementById('periodDuration');
     const overtimeDurationSelect = document.getElementById('overtimeDuration');
+    const breakDurationSelect = document.getElementById('breakDuration');
     const remainingTimeDiv = document.getElementById('remainingTime');
     const advancePeriodButton = document.getElementById('advancePeriodButton');
+
+    const timeoutButton = document.getElementById('timeoutButton');
+    const timeoutModal = document.getElementById('timeoutModal');
+    const timeoutCountdown = document.getElementById('timeoutCountdown');
+    // const timeoutCloseButton = document.getElementById('timeoutCloseButton');
+
+    let timeoutInterval = null;
+    let timeoutTime = 30;
+
+    function setTimeoutButtonEnabled(enabled) {
+        timeoutButton.disabled = !enabled;
+    }
 
     function getPeriodEnd(period) {
         if (period === 4) return 3 * periodDuration * 60 + overtimeDuration * 60;
@@ -35,6 +51,7 @@ function startClock() {
     function startTimer() {
         if (interval) return;
         setClockInputsEnabled(false);
+        setTimeoutButtonEnabled(false);
         interval = setInterval(() => {
             timer++;
             updateDisplay();
@@ -45,6 +62,11 @@ function startClock() {
                 timer = periodEnd;
                 updateDisplay();
                 stopTimer();
+
+                // TODO unset remaining time
+                remainingTimeDiv.textContent = '';
+                // replace with timer for intermission
+                startBreakTimer();
 
                 // Only show "Advance Period" button after period 3 if scores are tied
                 // and overtime is > 0
@@ -67,6 +89,32 @@ function startClock() {
             clearInterval(interval);
             interval = null;
             setClockInputsEnabled(true);
+            setTimeoutButtonEnabled(true);
+        }
+    }
+
+    function startBreakTimer() {
+        if (breakInterval) return;
+        breakInterval = setInterval(() => {
+            breakTimer++;
+            let remainingBreak = breakDuration*60 - breakTimer;
+            if (remainingBreak < 0) remainingBreak = 0;
+            const min = Math.floor(remainingBreak/60);
+            const sec = remainingBreak % 60;
+            remainingTimeDiv.textContent = `⏱️ ${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+
+            if (breakTimer >= breakDuration*60) {
+                stopBreakTimer()
+            }
+
+        }, 1000);
+    }
+
+    function stopBreakTimer() {
+        if (breakInterval) {
+            clearInterval(breakInterval);
+            breakInterval = null;
+            remainingTimeDiv.textContent = ''
         }
     }
 
@@ -82,6 +130,7 @@ function startClock() {
             console.error(`Unexpected value for currentPeriod: ${currentPeriod}`);
         }
         advancePeriodButton.style.display = 'none';
+        if (breakInterval) stopBreakTimer();
         updateDisplay();
     });
 
@@ -377,6 +426,31 @@ function startClock() {
         saveAppState();
     });
 
+    // Timeout button logic
+    timeoutButton.onclick = () => {
+        timeoutTime = 30;
+        timeoutCountdown.textContent = timeoutTime;
+        timeoutModal.style.display = "flex";
+        // timeoutCloseButton.disabled = true;
+        timeoutInterval = setInterval(() => {
+            timeoutTime--;
+            timeoutCountdown.textContent = timeoutTime;
+            if (timeoutTime <= 0) {
+                clearInterval(timeoutInterval);
+                timeoutModal.style.display = "none";
+                timeoutInterval = null;
+                // timeoutCloseButton.disabled = false;
+            }
+        }, 1000);
+    };
+
+    // Allow manual close after countdown
+    // timeoutCloseButton.onclick = () => {
+    //     if (timeoutInterval) clearInterval(timeoutInterval);
+    //     timeoutModal.style.display = "none";
+    //     timeoutInterval = null;
+    // };
+
     document.getElementById('resetButton').onclick = () => {
         if (interval) return;
         stopTimer();
@@ -423,6 +497,10 @@ function startClock() {
     overtimeDurationSelect.addEventListener('change', () => {
         overtimeDuration = parseInt(overtimeDurationSelect.value, 10);
         updateDisplay();
+    });
+
+    breakDurationSelect.addEventListener('change', () => {
+        breakDuration = parseInt(breakDurationSelect.value, 10);
     });
 
     restoreAppState();

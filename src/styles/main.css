@@ -254,3 +254,23 @@ h2 {
     background: #dbeaff;
     color: #23527c;
 }
+
+#timeoutButton {
+    position: absolute;
+    right: 120px;
+    top: 60px;
+    font-size: 1.1em;
+    background: #eaf3ff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+#timeoutButton:disabled {
+    background: #eee;
+    color: #aaa;
+    cursor: not-allowed;
+}
