@@ -1,5 +1,5 @@
 function startClock() {
-    let currentPeriod = 1; // Track current period (1, 2, 3, 'OT')
+    let currentPeriod = 1; // Track current period (1, 2, 3, 4, 5) // TODO shootouts
     let timer = 0;
     let interval = null;
     let periodDuration = 20; // default in minutes
@@ -22,7 +22,8 @@ function startClock() {
     const advancePeriodButton = document.getElementById('advancePeriodButton');
 
     function getPeriodEnd(period) {
-        if (period === 'OT') return 3 * periodDuration * 60 + overtimeDuration * 60;
+        if (period === 4) return 3 * periodDuration * 60 + overtimeDuration * 60;
+        if (period === 5) return 3 * periodDuration * 60 + 2 * overtimeDuration * 60;
         return period * periodDuration * 60;
     }
 
@@ -39,17 +40,20 @@ function startClock() {
             updateDisplay();
             tickPenalties();
 
-            let periodEnd = getPeriodEnd(currentPeriod === 'OT' ? 'OT' : currentPeriod);
+            let periodEnd = getPeriodEnd(currentPeriod);
             if (timer >= periodEnd) {
                 timer = periodEnd;
                 updateDisplay();
                 stopTimer();
 
                 // Only show "Advance Period" button after period 3 if scores are tied
-                if (currentPeriod === 3 && score1 !== score2) {
-                    advancePeriodButton.style.display = 'none';
-                } else {
+                // and overtime is > 0
+                if (currentPeriod < 3 
+                    || (currentPeriod === 3 && overtimeDuration > 0 && score1 === score2) 
+                    || currentPeriod === 4) {
                     advancePeriodButton.style.display = 'inline-block';
+                } else {
+                    advancePeriodButton.style.display = 'none';
                 }
 
                 const horn = new Audio('assets/hockey-horn.mp3');
@@ -67,31 +71,47 @@ function startClock() {
     }
 
     advancePeriodButton.addEventListener('click', () => {
-        if (currentPeriod === 1) currentPeriod = 2;
-        else if (currentPeriod === 2) currentPeriod = 3;
-        else if (currentPeriod === 3 && overtimeDuration > 0) currentPeriod = 'OT';
-        // Set timer to start of next period
-        timer = currentPeriod === 'OT'
-            ? 3 * periodDuration * 60
-            : (currentPeriod - 1) * periodDuration * 60;
+        if (currentPeriod < 4) {
+            timer = currentPeriod * periodDuration * 60;
+            currentPeriod++
+        }
+        else if (currentPeriod === 4) {
+            currentPeriod = 5;
+            timer = 3 * periodDuration * 60 + overtimeDuration * 60;
+        } else {
+            console.error(`Unexpected value for currentPeriod: ${currentPeriod}`);
+        }
         advancePeriodButton.style.display = 'none';
         updateDisplay();
     });
 
     function updatePeriodDisplay() {
-        periodDisplay.textContent = currentPeriod === 'OT' ? 'OT' : `Period ${currentPeriod}`;
+        if (currentPeriod < 4) {
+            periodDisplay.textContent = `Period ${currentPeriod}`;
+        } else if (currentPeriod === 4) {
+            periodDisplay.textContent = 'OT 1';
+        } else if (currentPeriod === 5) {
+            periodDisplay.textContent = 'OT 2';
+        } else {
+            periodDisplay.textContent = '';
+        }
     }
     
     function forcePeriodDisplay() {
-        currentPeriod = Math.ceil(timer / (periodDuration*60));
-        if (timer > 3*periodDuration*60 && overtimeDuration > 0) {
-            currentPeriod = 'OT'
+        if (timer > 3 * periodDuration * 60 && overtimeDuration > 0) {
+            if (timer < 3 * periodDuration * 60 + overtimeDuration * 60) {
+                currentPeriod = 4
+            } else {
+                currentPeriod = 5
+            }
+        } else {
+            currentPeriod = Math.ceil(timer / (periodDuration*60));
         }
         updatePeriodDisplay()
     }
 
     function updateRemainingTime() {
-        let periodEnd = getPeriodEnd(currentPeriod === 'OT' ? 'OT' : currentPeriod);
+        let periodEnd = getPeriodEnd(currentPeriod);
         let remaining = periodEnd - timer;
         if (remaining < 0) remaining = 0;
         const min = Math.floor(remaining / 60);
@@ -376,8 +396,10 @@ function startClock() {
     // Make clock inputs editable
     minutesInput.addEventListener('change', () => {
         let m = parseInt(minutesInput.value, 10);
-        if (isNaN(m) || m < 0) m = 0;
-        if (m > 3*periodDuration+overtimeDuration) m = 3*periodDuration+overtimeDuration;
+        if (isNaN(m) || m < 0) return;
+        if (m > 3 * periodDuration + 2 * overtimeDuration) {
+            m = 3 * periodDuration + 2 * overtimeDuration
+        }
         const seconds = timer % 60;
         timer = m * 60 + seconds;
         updateDisplay();
@@ -440,7 +462,9 @@ function startClock() {
         document.getElementById('team1Name').value = state.team1Name ?? "Home Team";
         document.getElementById('team2Name').value = state.team2Name ?? "Visitor Team";
         periodDuration = state.periodDuration ?? 20;
+        document.getElementById('periodDuration').value = periodDuration;
         overtimeDuration = state.overtimeDuration ?? 0;
+        document.getElementById('overtimeDuration').value = overtimeDuration;
         team1Penalties = state.team1Penalties ?? [];
         team2Penalties = state.team2Penalties ?? [];
         updateDisplay();
