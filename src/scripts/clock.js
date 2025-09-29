@@ -48,6 +48,10 @@ function startClock() {
         secondsInput.disabled = !enabled;
     }
 
+    function updateStartStopButton() {
+        document.getElementById('startStopButton').textContent = interval ? "Stop" : "Start";
+    }
+
     function startTimer() {
         if (interval) return;
         setClockInputsEnabled(false);
@@ -56,6 +60,7 @@ function startClock() {
             timer++;
             updateDisplay();
             tickPenalties();
+            updateStartStopButton();
 
             let periodEnd = getPeriodEnd(currentPeriod);
             if (timer >= periodEnd) {
@@ -88,6 +93,7 @@ function startClock() {
         if (interval) {
             clearInterval(interval);
             interval = null;
+            updateStartStopButton();
             setClockInputsEnabled(true);
             setTimeoutButtonEnabled(true);
         }
@@ -508,6 +514,7 @@ function startClock() {
     updateDisplay();
     updateScores();
     renderPenalties();
+    updateStartStopButton();
 
     // On initial load, ensure inputs are enabled
     setClockInputsEnabled(true);

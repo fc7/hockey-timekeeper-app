@@ -2,7 +2,7 @@
 
 ## Overview
 
-The **Hockey Timekeeper App** is a simple web application designed to serve as a scoreboard for amateur (ice or inline skater) hockey games. It allows tracking game time (total running time and time remaining in period), scores, and penalties.
+The **Hockey Timekeeper App** is a simple web application designed to serve as a scoreboard for amateur ice or inline skater hockey games. It allows tracking game time (total running time and time remaining in period), scores, and penalties.
 
 It is _not_ really designed for public display in a hockey venue, but rather as a tool for the timekeeper. More specifically, its primary use case is to serve as an emergency backup in case of technical issues with the official scoreboard. (See [Usage as emergency scoreboard](#usage-as-emergency-scoreboard) below.)
 
@@ -37,7 +37,7 @@ NB: There is currently no support for shootouts.
 
 The primary goal of this app is to serve as an _emergency tool_ for timekeepers during a hockey game, in case of a technical failure of the venue's default timekeeping device.
 
-Should this ever happen, you can quickly set the score and the timer (by separately entering the minutes and seconds on the main clock display) to reflect the current state of the running game. Each active penalty can also be entered and the remaining time can be manually set to its actual value. As soon as this is finalized, the timer can be started by pressing the space bar.
+Should this ever happen, you can quickly set the score and the timer (by separately entering the minutes and seconds on the main clock display) to reflect the current state of the running game. Each active penalty can also be entered and the remaining time can be manually set to its actual value. As soon as this is done, the timer can be started by pressing the space bar or the "Start" button.
 
 ## License
 
