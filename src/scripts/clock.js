@@ -68,10 +68,7 @@ function startClock() {
                 updateDisplay();
                 stopTimer();
 
-                // TODO unset remaining time
                 remainingTimeDiv.textContent = '';
-                // replace with timer for intermission
-                startBreakTimer();
 
                 // Only show "Advance Period" button after period 3 if scores are tied
                 // and overtime is > 0
@@ -79,6 +76,7 @@ function startClock() {
                     || (currentPeriod === 3 && overtimeDuration > 0 && score1 === score2) 
                     || currentPeriod === 4) {
                     advancePeriodButton.style.display = 'inline-block';
+                    startBreakTimer();
                 } else {
                     advancePeriodButton.style.display = 'none';
                 }
@@ -460,6 +458,7 @@ function startClock() {
     document.getElementById('resetButton').onclick = () => {
         if (interval) return;
         stopTimer();
+        stopBreakTimer();
         timer = 0;
         currentPeriod = 1;
         score1 = 0;
