@@ -63,6 +63,11 @@ h2 {
     margin: 20px 0;
 }
 
+#score1Value, #score2Value {
+    font-size: 2em;
+    font-weight: 700;
+}
+
 .team {
     font-size: 2em;
     text-align: center;
@@ -148,7 +153,7 @@ h2 {
 .score-widget {
     display: inline-flex;
     flex-direction: column;
-    vertical-align: middle;
+    vertical-align: 60%;
     margin-left: 8px;
 }
 
