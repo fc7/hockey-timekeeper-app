@@ -26,6 +26,11 @@ h2 {
     margin-bottom: 20px;
 }
 
+h3 {
+    font-size: 1.2em;
+    margin-top: 0px;
+}
+
 .clock {
     font-size: 5em;
     text-align: center;
@@ -71,6 +76,11 @@ h2 {
 .team {
     font-size: 2em;
     text-align: center;
+}
+
+span#home, span#visitor {
+    font-size: 0.7em;
+    font-weight: 4 00;
 }
 
 .team-name {
@@ -183,7 +193,7 @@ h2 {
     position: absolute;
     left: 30px;
     top: 60px;
-    font-size: 1.1em;
+    font-size: 0.9em;
     background: #eaf3ff;
     padding: 10px 16px;
     border-radius: 8px;
@@ -298,4 +308,15 @@ h2 {
     background: #eee;
     color: #aaa;
     cursor: not-allowed;
+}
+
+#language-selector {
+    position:absolute; 
+    top:10px; 
+    right:30px; 
+    text-align:right;
+}
+
+#language-selector > * {
+    font-size:0.9em;
 }

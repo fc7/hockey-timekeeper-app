@@ -50,6 +50,7 @@
                 </div>
                 <div class="scoreboard">
                     <div class="team" id="team1">
+                        <span id="home">Home</span>
                         <input type="text" id="team1Name" class="team-name" value="Home Team" />
                         <div class="score" id="score1">
                             <span id="score1Value">0</span>
@@ -60,6 +61,7 @@
                         </div>
                     </div>
                     <div class="team" id="team2">
+                        <span id="visitor">Visitor</span>
                         <input type="text" id="team2Name" class="team-name" value="Visitor Team" />
                         <div class="score" id="score2">
                             <span id="score2Value">0</span>
@@ -81,6 +83,13 @@
         <button id="advancePeriodButton" style="display:none;">Advance Period</button>
         <button id="resetButton">Reset</button>
         <button id="timeoutButton">Timeout</button>
+        <div id="language-selector">
+            <label for="languageSelect"></label>
+            <select id="languageSelect">
+                <option value="en" selected>English</option>
+                <option value="de">Deutsch</option>
+            </select>
+        </div>
     </div>
     <div id="penaltyModal" class="modal" style="display:none;">
         <div class="modal-content">

@@ -5,6 +5,7 @@ function startClock() {
     let periodDuration = 20; // default in minutes
     let overtimeDuration = 0;
     let breakDuration = 5;
+    let currentLang = "en";
     let breakTimer = 0;
     let breakInterval = null;
 
@@ -16,6 +17,50 @@ function startClock() {
     let team2Penalties = [];
     const maxPenalties = 5;
 
+    // Localization dictionary
+    const translations = {
+        en: {
+            periodDuration: "Period length",
+            overtimeDuration: "Overtime length",
+            breakDuration: "Intermission",
+            start: "Start",
+            stop: "Stop",
+            reset: "Reset",
+            timeout: "Timeout",
+            period: "Period",
+            overtime: "OT",
+            home: "Home",
+            visitor: "Visitor",
+            homePenalties: "Home Penalties",
+            visitorPenalties: "Visitor Penalties",
+            addPenalty: "+ Add Penalty",
+            advancePeriod: "Advance Period",
+            remaining: "Remaining",
+            score: "Score",
+            language: " "
+        },
+        de: {
+            periodDuration: "Dauer Drittel",
+            overtimeDuration: "Dauer Verlängerung",
+            breakDuration: "Dauer Pause",
+            start: "Start",
+            stop: "Stopp",
+            reset: "Reset",
+            timeout: "Auszeit",
+            period: "Drittel",
+            overtime: "Verlängerung",
+            home: "Heim",
+            visitor: "Gast",
+            homePenalties: "Strafen Heim",
+            visitorPenalties: "Strafen Gast",
+            addPenalty: "+ Strafe hinzufügen",
+            advancePeriod: "Nächstes Drittel",
+            remaining: "Verbleibend",
+            score: "Spielstand",
+            language: " "
+        }
+    };
+
     const minutesInput = document.getElementById('clock-minutes');
     const secondsInput = document.getElementById('clock-seconds');
     const periodDisplay = document.getElementById('periodDisplay');
@@ -24,6 +69,7 @@ function startClock() {
     const breakDurationSelect = document.getElementById('breakDuration');
     const remainingTimeDiv = document.getElementById('remainingTime');
     const advancePeriodButton = document.getElementById('advancePeriodButton');
+    const languageSelect = document.getElementById('languageSelect');
 
     const timeoutButton = document.getElementById('timeoutButton');
     const timeoutModal = document.getElementById('timeoutModal');
@@ -61,30 +107,35 @@ function startClock() {
             updateDisplay();
             tickPenalties();
             updateStartStopButton();
-
-            let periodEnd = getPeriodEnd(currentPeriod);
-            if (timer >= periodEnd) {
-                timer = periodEnd;
-                updateDisplay();
-                stopTimer();
-
-                remainingTimeDiv.textContent = '';
-
-                // Only show "Advance Period" button after period 3 if scores are tied
-                // and overtime is > 0
-                if (currentPeriod < 3 
-                    || (currentPeriod === 3 && overtimeDuration > 0 && score1 === score2) 
-                    || currentPeriod === 4) {
-                    advancePeriodButton.style.display = 'inline-block';
-                    startBreakTimer();
-                } else {
-                    advancePeriodButton.style.display = 'none';
-                }
-
-                const horn = new Audio('assets/hockey-horn.mp3');
-                horn.play();
-            }
+            checkPeriodEnd();
         }, 1000);
+    }
+
+    function checkPeriodEnd() {
+        let periodEnd = getPeriodEnd(currentPeriod);
+        if (timer >= periodEnd) {
+            timer = periodEnd;
+            updateDisplay();
+            stopTimer();
+
+            remainingTimeDiv.textContent = '';
+
+            // Only show "Advance Period" button after period 3 if scores are tied
+            // and overtime is > 0
+            if (currentPeriod < 3 
+                || (currentPeriod === 3 && overtimeDuration > 0 && score1 === score2) 
+                || currentPeriod === 4) {
+                advancePeriodButton.style.display = 'inline-block';
+                startBreakTimer();
+            } else {
+                advancePeriodButton.style.display = 'none';
+                startStopButton.style.display = 'none';
+                timeoutButton.style.display = 'none';
+            }
+
+            const horn = new Audio('assets/hockey-horn.mp3');
+            horn.play();
+        }
     }
 
     function stopTimer() {
@@ -140,11 +191,11 @@ function startClock() {
 
     function updatePeriodDisplay() {
         if (currentPeriod < 4) {
-            periodDisplay.textContent = `Period ${currentPeriod}`;
+            periodDisplay.textContent = `${t('period')}: ${currentPeriod}`;
         } else if (currentPeriod === 4) {
-            periodDisplay.textContent = 'OT 1';
+            periodDisplay.textContent = `${t('overtime')} 1`;
         } else if (currentPeriod === 5) {
-            periodDisplay.textContent = 'OT 2';
+            periodDisplay.textContent = `${t('overtime')} 2`;
         } else {
             periodDisplay.textContent = '';
         }
@@ -382,16 +433,6 @@ function startClock() {
         }
     });
 
-    // document.addEventListener('keydown', (event) => {
-    //     if (event.code === 'P' || event.key === 'p') {
-    //         event.preventDefault();
-    //         if (!interval && (timer % (periodDuration*60) == 0)) {
-    //             updatePeriodDisplay();
-    //         }
-    //     }
-    // });
-
-    // Add button event listener
     const startStopButton = document.getElementById('startStopButton');
     if (startStopButton) {
         startStopButton.addEventListener('click', () => {
@@ -404,7 +445,6 @@ function startClock() {
         });
     }
 
-    // Score button listeners
     document.getElementById('score1Up').addEventListener('click', () => {
         if (interval) return;
         score1++;
@@ -448,13 +488,6 @@ function startClock() {
         }, 1000);
     };
 
-    // Allow manual close after countdown
-    // timeoutCloseButton.onclick = () => {
-    //     if (timeoutInterval) clearInterval(timeoutInterval);
-    //     timeoutModal.style.display = "none";
-    //     timeoutInterval = null;
-    // };
-
     document.getElementById('resetButton').onclick = () => {
         if (interval) return;
         stopTimer();
@@ -466,6 +499,8 @@ function startClock() {
         team1Penalties = [];
         team2Penalties = [];
         advancePeriodButton.style.display = 'none';
+        timeoutButton.style.display = 'inline-block';
+        startStopButton.style.display = 'block';
         updateDisplay();
         updateScores();
         renderPenalties();
@@ -508,20 +543,55 @@ function startClock() {
         breakDuration = parseInt(breakDurationSelect.value, 10);
     });
 
+    // Language selection event
+    languageSelect.addEventListener('change', () => {
+        currentLang = languageSelect.value;
+        updatePeriodDisplay();
+        localizeUI();
+    });
+
     restoreAppState();
 
     updateDisplay();
+    checkPeriodEnd();
     updateScores();
     renderPenalties();
     updateStartStopButton();
 
+    // Call localizeUI() after DOM is ready and whenever language changes
+    localizeUI();
+
     // On initial load, ensure inputs are enabled
     setClockInputsEnabled(true);
+
+    // Localization function
+    function t(key) {
+        return translations[currentLang][key] || key;
+    }
+
+    // Update UI strings
+    function localizeUI() {
+        document.querySelector('label[for="periodDuration"]').textContent = t('periodDuration');
+        document.querySelector('label[for="overtimeDuration"]').textContent = t('overtimeDuration');
+        document.querySelector('label[for="breakDuration"]').textContent = t('breakDuration');
+        document.getElementById('startStopButton').textContent = interval ? t('stop') : t('start');
+        document.getElementById('resetButton').textContent = t('reset');
+        document.getElementById('timeoutButton').textContent = t('timeout');
+        document.getElementById('advancePeriodButton').textContent = t('advancePeriod');
+        document.querySelector('label[for="languageSelect"]').textContent = t('language');
+        document.getElementById('home').textContent = t('home');
+        document.getElementById('visitor').textContent = t('visitor');
+        document.getElementById('penalties-team1').querySelector('h3').textContent = t('homePenalties');
+        document.getElementById('penalties-team2').querySelector('h3').textContent = t('visitorPenalties');
+        document.getElementById('addPenaltyTeam1').textContent = t('addPenalty');
+        document.getElementById('addPenaltyTeam2').textContent = t('addPenalty');
+    }
 
     function saveAppState() {
         const state = {
             timer,
             currentPeriod,
+            currentLang,
             score1,
             score2,
             team1Name: document.getElementById('team1Name').value,
@@ -541,6 +611,7 @@ function startClock() {
 
         timer = state.timer ?? 0;
         currentPeriod = state.currentPeriod ?? 1;
+        currentLang = state.currentLang ?? "en";
         score1 = state.score1 ?? 0;
         score2 = state.score2 ?? 0;
         document.getElementById('team1Name').value = state.team1Name ?? "Home Team";
@@ -551,8 +622,12 @@ function startClock() {
         document.getElementById('overtimeDuration').value = overtimeDuration;
         team1Penalties = state.team1Penalties ?? [];
         team2Penalties = state.team2Penalties ?? [];
+        document.querySelector('label[for="languageSelect"]').textContent = t('language');
+        document.getElementById('languageSelect').value = currentLang;
+        localizeUI();
         updateDisplay();
         renderPenalties();
+        checkPeriodEnd();
     }
 }
 
@@ -568,4 +643,4 @@ function updateCurrentDateTime() {
     document.getElementById('currentDateTime').textContent = `${dd}.${mm}.${yyyy} ${hh}:${min}`;
 }
 updateCurrentDateTime();
-setInterval(updateCurrentDateTime, 10000);
+setInterval(updateCurrentDateTime, 5000);
