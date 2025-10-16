@@ -192,7 +192,7 @@ span#home, span#visitor {
 .settings-panel {
     position: absolute;
     left: 30px;
-    top: 60px;
+    top: 20px;
     font-size: 0.9em;
     background: #eaf3ff;
     padding: 10px 16px;
