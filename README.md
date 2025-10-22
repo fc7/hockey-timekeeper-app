@@ -1,5 +1,8 @@
 # Hockey Timekeeper App
 
+> [!WARNING]
+> This has now been superseded by <https://github.com/fc7/hockey-timekeeper>
+
 ## Overview
 
 The **Hockey Timekeeper App** is a simple web application designed to serve as a scoreboard for amateur ice or inline skater hockey games. It allows tracking game time (total running time and time remaining in period), scores, and penalties.
